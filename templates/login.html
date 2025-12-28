@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h1>Login</h1>
+  <p class="muted">Enter your username and master password.</p>
+
+  <form method="post" action="{{ url_for('login_post') }}">
+    <label>Username</label>
+    <input name="username" autocomplete="username" required>
+
+    <label>Master Password</label>
+    <input name="password" type="password" autocomplete="current-password" required>
+
+    <button class="btn primary" type="submit">Login</button>
+  </form>
+
+  <div class="footer">
+    No account? <a class="link" href="{{ url_for('register_page') }}">Register</a>
+  </div>
+</div>
+{% endblock %}

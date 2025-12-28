@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="grid">
+  <div class="card">
+    <h1>Vault</h1>
+    <p class="muted">Your passwords are stored encrypted (AES-GCM).</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>App</th>
+          <th>Login Username</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td>{{ row[1] }}</td>
+          <td>{{ row[2] }}</td>
+          <td>
+            <form method="post" action="{{ url_for('vault_view') }}" style="display:inline;">
+              <input type="hidden" name="item_id" value="{{ row[0] }}">
+              <button class="btn" type="submit">👁️</button>
+            </form>
+
+            <form method="post" action="{{ url_for('vault_delete') }}"
+                  style="display:inline;"
+                  onsubmit="return confirm('Delete this password?');">
+              <input type="hidden" name="item_id" value="{{ row[0] }}">
+              <button class="btn danger" type="submit">🗑️</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3" class="muted">No entries yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Add Password</h2>
+    <form method="post" action="{{ url_for('vault_add') }}">
+      <label>App Name</label>
+      <input name="app_name" required>
+
+      <label>Login Username</label>
+      <input name="login_username" required>
+
+      <label>Password</label>
+      <input name="password" type="password" required>
+
+      <button class="btn primary" type="submit">Save</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
