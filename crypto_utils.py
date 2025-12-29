@@ -1,6 +1,8 @@
 import os
 import hashlib
 import bcrypt
+import base64
+from Crypto.Cipher import AES
 
 
 def hash_password(password: str) -> bytes:
@@ -26,9 +28,6 @@ def derive_key(master_password: str, salt: bytes, iterations: int = 200_000) -> 
         iterations,
         dklen=32
     )
-
-from Crypto.Cipher import AES
-import base64
 
 
 def encrypt_password(key: bytes, plain_password: str) -> tuple[str, str, str]:

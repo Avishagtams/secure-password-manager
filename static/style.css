@@ -115,3 +115,86 @@ th{color:var(--muted); font-weight:700}
 .actions form{flex:1}
 .actions input{margin-top:0}
 .actions .btn{margin-top:10px; width:100%}
+
+
+
+
+/* Make icon buttons same size */
+.icon-btn{
+  width: 44px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Modal */
+.modal-backdrop{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 999;
+}
+
+.modal-backdrop.show{ display:flex; }
+
+.modal{
+  width: min(560px, 100%);
+  background: rgba(17,26,46,.95);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.55);
+  padding: 16px;
+}
+
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.modal-title{
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.modal-body{ margin-top: 6px; }
+
+.pw-box{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,.20);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.pw-box code{
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 15px;
+  word-break: break-all;
+}
+
+.modal-error{
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(239,68,68,.35);
+  background: rgba(239,68,68,.08);
+}
+
+.modal-footer{
+  display:flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}

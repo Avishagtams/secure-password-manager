@@ -19,17 +19,43 @@
           <td>{{ row[1] }}</td>
           <td>{{ row[2] }}</td>
           <td>
-            <form method="post" action="{{ url_for('vault_view') }}" style="display:inline;">
-              <input type="hidden" name="item_id" value="{{ row[0] }}">
-              <button class="btn" type="submit">👁️</button>
-            </form>
+            <!-- View (modal) -->
+            <button class="btn icon-btn" type="button" onclick="viewPassword('{{ row[0] }}')">👁️</button>
 
+            <!-- Delete -->
             <form method="post" action="{{ url_for('vault_delete') }}"
                   style="display:inline;"
                   onsubmit="return confirm('Delete this password?');">
               <input type="hidden" name="item_id" value="{{ row[0] }}">
-              <button class="btn danger" type="submit">🗑️</button>
+              <button class="btn danger icon-btn" type="submit">🗑️</button>
             </form>
+
+            <!-- Update -->
+            <details style="display:inline-block; margin-left:8px;">
+              <summary class="btn icon-btn" style="cursor:pointer; list-style:none;">✏️</summary>
+
+              <form method="post" action="{{ url_for('vault_update') }}"
+                    style="margin-top:10px; display:flex; gap:8px; align-items:end; flex-wrap:wrap;">
+                <input type="hidden" name="item_id" value="{{ row[0] }}">
+
+                <div>
+                  <label style="font-size:12px;">App</label>
+                  <input name="app_name" value="{{ row[1] }}" required style="width:140px;">
+                </div>
+
+                <div>
+                  <label style="font-size:12px;">Login</label>
+                  <input name="login_username" value="{{ row[2] }}" required style="width:160px;">
+                </div>
+
+                <div>
+                  <label style="font-size:12px;">New Password</label>
+                  <input name="password" type="password" placeholder="New password" required style="width:160px;">
+                </div>
+
+                <button class="btn primary" type="submit">Update</button>
+              </form>
+            </details>
           </td>
         </tr>
         {% else %}
@@ -57,9 +83,105 @@
     </form>
   </div>
 </div>
+
+<!-- Password Modal -->
+<div id="pwModal" class="modal-backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pwModalTitle">
+    <div class="modal-header">
+      <div>
+        <div id="pwModalTitle" class="modal-title">Saved Password</div>
+        <div class="muted" style="font-size: 13px;">Visible only while you are logged in.</div>
+      </div>
+      <button class="btn icon-btn" type="button" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="pw-box">
+        <code id="pwValue">••••••••</code>
+        <button class="btn" type="button" onclick="copyPassword()">Copy</button>
+      </div>
+      <div id="pwError" class="modal-error" style="display:none;"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn primary" type="button" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentPassword = "";
+
+  async function viewPassword(itemId) {
+    currentPassword = "";
+    document.getElementById("pwValue").textContent = "Loading...";
+    document.getElementById("pwError").style.display = "none";
+    openModal();
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append("item_id", itemId);
+
+      const res = await fetch("{{ url_for('vault_view') }}", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formData.toString()
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || "Failed to fetch password.");
+      }
+
+      currentPassword = data.password || "";
+      document.getElementById("pwValue").textContent = currentPassword || "(empty)";
+    } catch (e) {
+      document.getElementById("pwValue").textContent = "••••••••";
+      const err = document.getElementById("pwError");
+      err.textContent = e.message || "Error.";
+      err.style.display = "block";
+    }
+  }
+
+  function openModal() {
+    const el = document.getElementById("pwModal");
+    el.classList.add("show");
+    el.setAttribute("aria-hidden", "false");
+  }
+
+  function closeModal() {
+    const el = document.getElementById("pwModal");
+    el.classList.remove("show");
+    el.setAttribute("aria-hidden", "true");
+    currentPassword = "";
+  }
+
+  async function copyPassword() {
+    try {
+      if (!currentPassword) return;
+      await navigator.clipboard.writeText(currentPassword);
+    } catch (e) {
+      // fallback simple
+      const tmp = document.createElement("textarea");
+      tmp.value = currentPassword;
+      document.body.appendChild(tmp);
+      tmp.select();
+      document.execCommand("copy");
+      document.body.removeChild(tmp);
+    }
+  }
+
+  // close on backdrop click
+  document.addEventListener("click", (e) => {
+    const modal = document.getElementById("pwModal");
+    if (!modal.classList.contains("show")) return;
+    if (e.target === modal) closeModal();
+  });
+
+  // close on ESC
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  });
+</script>
 {% endblock %}
-
-
-
-
-

@@ -108,6 +108,20 @@ def get_vault_secret(owner_username, item_id):
     return row
 
 
+def update_vault_item(owner_username, item_id, app_name, login_username, nonce, ciphertext, tag):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        UPDATE vault
+        SET app_name = ?, login_username = ?, nonce = ?, ciphertext = ?, tag = ?
+        WHERE owner_username = ? AND id = ?
+    """, (app_name, login_username, nonce, ciphertext, tag, owner_username, item_id))
+
+    conn.commit()
+    conn.close()
+
+
 def delete_vault_item(owner_username, item_id):
     conn = get_connection()
     cur = conn.cursor()
