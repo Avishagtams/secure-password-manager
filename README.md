@@ -90,14 +90,13 @@ http://127.0.0.1:5000
 
 📂 Project structure
 Secure_Password_Manager/
-│
-├── app_web.py # Main Flask application
-├── crypto_utils.py # Cryptographic utilities
-├── db.py # Database access layer
-├── templates/ # HTML templates
-├── static/ # CSS and frontend assets
-├── passwords.db # Database SQLite data (automatically generated)
-└── README.md
+- app_web.py # Main Flask application
+- crypto_utils.py # Cryptographic utilities
+- db.py # Database access layer
+- emplates/ # HTML templates
+- static/ # CSS and frontend assets
+- passwords.db # Database SQLite data (automatically generated)
+- README.md
 
 🧪 Tests
 
