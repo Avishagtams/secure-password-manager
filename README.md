@@ -108,6 +108,6 @@ python -m pytest
 
 👤 Author
 
-Avishag Tamsut and Sahar Emunah
+Avishag Tamsut and Sahar Emmuna
 Bachelor of Science in Software Engineering
 Sami Shimon College of Engineering (SCE)
